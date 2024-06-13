@@ -69,6 +69,26 @@ app.post('/send-message', authenticateToken, (req, res) => {
     });
 });
 
+app.post('/send-media', authenticateToken, (req, res) => {
+    const { from, text, path } = req.body;    
+    const media = MessageMedia.fromFilePath(path);
+
+    if(text !== '') {
+        client.sendMessage(from, media, { caption: text}).then(response => {
+            res.status(200).send(response);
+        }).catch(error => {
+            res.status(500).send(error);
+        });
+    }else{
+        client.sendMessage(from, media).then(response => {
+            res.status(200).send(response);
+        }).catch(error => {
+            res.status(500).send
+        });
+    }
+    
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
