@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code</title>
+</head>
+<body>
+    <h1>QR Code for WhatsApp Web</h1>
+    <div id="status-message"></div>
+    <img id="qr-code" src="" alt="QR Code will be displayed here" style="display:none;">
+    <script>
+        fetch('/qr-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.authenticated) {
+                    document.getElementById('status-message').textContent = 'Sesión ya iniciada';
+                } else {
+                    const qrCodeImg = document.getElementById('qr-code');
+                    qrCodeImg.src = `data:image/png;base64,${data.qrCode}`;
+                    qrCodeImg.style.display = 'block';
+                }
+            });
+    </script>
+</body>
+</html>

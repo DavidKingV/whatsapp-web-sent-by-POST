@@ -15,6 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
+let isAuthenticated = false; // Variable para verificar si está autenticado
+let qrCodeData = ''; 
+
 const client = new Client({
     authStrategy: new LocalAuth()
 });
@@ -23,15 +26,20 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 
+client.on('authenticated', () => {
+    isAuthenticated = true;
+    console.log('Client is authenticated');
+});
+
+client.on('auth_failure', () => {
+    isAuthenticated = false;
+    console.log('Authentication failed');
+});
+
 client.on('qr', qr => {
-    // Genera el QR y guárdalo como una imagen
-    qrcode.toFile(path.join(__dirname, 'qr.png'), qr, (err) => {
-        if (err) {
-            console.error('Error generating QR code', err);
-        } else {
-            console.log('QR code saved as qr.png');
-        }
-    });
+    qrCodeData = qr;
+    isAuthenticated = false; // Asegurarse de que no esté autenticado
+    console.log('QR code received');
 });
 
 client.initialize();
@@ -90,6 +98,25 @@ app.post('/send-media', authenticateToken, async (req, res) => {
         }
     } catch (error) {
         res.status(500).send(error);
+    }
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Ruta para servir el código QR
+app.get('/qr-status', (req, res) => {
+    if (isAuthenticated) {
+        res.json({ authenticated: true });
+    } else {
+        qrcode.toBuffer(qrCodeData, (err, buffer) => {
+            if (err) {
+                res.status(500).send('Error generating QR code');
+            } else {
+                res.json({ authenticated: false, qrCode: buffer.toString('base64') });
+            }
+        });
     }
 });
 
