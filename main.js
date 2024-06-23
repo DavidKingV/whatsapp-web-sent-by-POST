@@ -19,7 +19,6 @@ let isAuthenticated = false; // Variable para verificar si está autenticado
 let qrCodeData = ''; 
 
 const client = new Client({
-    authStrategy: new LocalAuth()
 });
 
 client.on('ready', () => {
@@ -39,7 +38,7 @@ client.on('auth_failure', () => {
 client.on('qr', qr => {
     qrCodeData = qr;
     isAuthenticated = false; // Asegurarse de que no esté autenticado
-    console.log('QR code received');
+    console.log('QR RECEIVED', qr);
 });
 
 client.initialize();
