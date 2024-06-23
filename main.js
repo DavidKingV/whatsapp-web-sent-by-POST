@@ -8,7 +8,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = 0;
+const port = 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
