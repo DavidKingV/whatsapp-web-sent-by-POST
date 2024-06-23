@@ -8,7 +8,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = 3000;
+const port = 0;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -70,7 +70,8 @@ function authenticateToken(req, res, next) {
 app.post('/send-message', authenticateToken, (req, res) => {
     const { from, text } = req.body;
 
-    client.sendMessage(from, text).then(response => {        
+    client.sendMessage(from, text).then(response => {
+        console.log(response);        
         res.status(200).send(response);
     }).catch(error => {
         res.status(500).send(error);
