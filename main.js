@@ -1,6 +1,7 @@
 require('dotenv').config()
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
+const qrcodeterminal = require('qrcode-terminal');
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -47,7 +48,8 @@ client.on('auth_failure', () => {
 client.on('qr', qr => {
     qrCodeData = qr;
     isAuthenticated = false; // Asegurarse de que no esté autenticado
-    console.log('QR code received', qr);
+    qrcodeterminal.generate(qr, {small: true});
+    console.log('QR code received');
 });
 
 client.initialize();
