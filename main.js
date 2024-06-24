@@ -47,7 +47,7 @@ client.on('auth_failure', () => {
 client.on('qr', qr => {
     qrCodeData = qr;
     isAuthenticated = false; // Asegurarse de que no esté autenticado
-    console.log('QR code received');
+    console.log('QR code received', qr);
 });
 
 client.initialize();
