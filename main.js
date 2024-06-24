@@ -19,7 +19,15 @@ let isAuthenticated = false; // Variable para verificar si está autenticado
 let qrCodeData = ''; 
 
 const client = new Client({
-    authStrategy: new LocalAuth()
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2410.1.html',
+    },
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+
 });
 
 client.on('ready', () => {
